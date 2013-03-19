@@ -1,2 +1,0 @@
-# remctld configuration for running WebKDC function tests.
-test ALL @abs_top_srcdir@/tests/data/cmd-webkdc ANYUSER
