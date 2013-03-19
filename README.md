@@ -34,7 +34,7 @@ Submissions may either exist as pull-requests to this repository, as a link in a
 
 ### Judging ###
 
-Submissions will be judged by peers, and a final decision will be made using the benevolent dictator model, by Clockfort.
+Submissions will be judged by peers, and a final decision will be made using the benevolent dictator model, by Clockfort, in about a month (2013-04-18), depending on responses/quality of submitted work.
 
 ## Also Accepting ##
 
