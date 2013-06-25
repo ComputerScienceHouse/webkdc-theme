@@ -1,53 +1,31 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-  <head>
-    <http-equiv="pragma" content="no-cache">
-    <title>WebAuth Logout</title>
-  </head>
-
-  [% IF notdefined %]
-<!--
-This is the template for WebAuth logout.  It is displayed whenever the
-logout.fcgi script is executed.  logout.fcgi deletes the single sign-on
-cookie.  Variables used:
-
-cookies_flag           : found a single sign-on cookie to delete
-
-You may customize this file however you wish for your site.
-
-The authors hereby relinquish any claim to any copyright that they may
-have in this work, whether granted under contract or by operation of law
-or international treaty, and hereby commit to the public, at large, that
-they shall not, at any time in the future, seek to enforce any copyright
-in this work against any person or entity, or prevent any person or
-entity from copying, publishing, distributing or creating derivative
-works of this work.
--->
-  [% END %]
-
-  <body>
-    <h1 align="center">WebAuth Logout</h1>
-    <div class="loginbox" align="center">
-      <table border="1" width="70%">
-        <tr>
-          <td><img alt="Logout" src="/images/logout.png"
-                   width="160" height="160"/></td>
-          <td>
-            <div class="logouttext" align="center">
-              <p><strong>You have chosen to remove your WebAuth single
-              sign-on cookie.</strong></p>
-
-              <p><strong>Results:</strong>
-              [% IF cookies_flag %]
-                Single sign-on cookie has been deleted.
-              [% ELSE %]
-                No single sign-on cookies found to delete.
-              [% END %]
-              </p>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </body>
+	<!-- Designed by Dan Fuhry in Rochester. (lol) -->
+	<!-- :mode=html: (to make jEdit happy) -->
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+		<title>CSH: WebAuth Login</title>
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/webauth.css" />
+		
+		<script type="text/javascript" src="/images/jquery.js"></script>
+		<script type="text/javascript" src="/images/bootstrap/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="form-wrapper">
+			<div class="csh-logo">
+				<img alt="Computer Science House" src="/images/csh-logo.png" />
+			</div>
+			
+			<div class="alert alert-success">
+				<p><strong>Logout complete.</strong></p>
+				<p>Your Webauth cookie has been deleted. However if you are logged into multiple sites, you may continue to be
+					logged into sites other than the one you explicitly logged out of for a period of time.</p>
+				<p>To ensure complete logout from all Webauth sites, either clear cookies or close your browser.</p>
+			</div>
+		</div>
+	</body>
 </html>

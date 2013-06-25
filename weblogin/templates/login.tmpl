@@ -1,193 +1,117 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-  <head>
-    <http-equiv="pragma" content="no-cache">
-    <title>WebAuth Login</title>
-  </head>
-
-  [% IF notdefined %]
-<!--
-This is the template for the WebAuth login page.  This page is called from
-login.fcgi script on the weblogin server.  It displays a form asking the
-user for username and password.  Variables used:
-
-error                  : some error occurred
-err_missinginput       : one of username or password missing
-err_username           : no username error
-err_password           : no password error
-err_loginfailed        : username and password were incorrect
-err_forced             : web site requires username/password login
-err_rejected           : username not permitted to authenticate
-RT                     : Response Token
-ST                     : Service Token
-username               : the username
-login_cancel           : a cancel URL was specified
-cancel_url             : the specified cancel URL
-show_remuser           : show a button for REMOTE_USER authentication
-remuser_failed         : REMOTE_USER authentication was tried and failed
-remuser_url            : where to send the user for REMOTE_USER auth
-
-You may customize this file however you wish for your site.
-
-The authors hereby relinquish any claim to any copyright that they may
-have in this work, whether granted under contract or by operation of law
-or international treaty, and hereby commit to the public, at large, that
-they shall not, at any time in the future, seek to enforce any copyright
-in this work against any person or entity, or prevent any person or
-entity from copying, publishing, distributing or creating derivative
-works of this work.
--->
-  [% END %]
-
-  <body onload="document.login.username.focus();">
-    <h1 align="center">WebAuth Login</h1>
-    [% IF error %]
-      <div class="error" align="center">
-        <p><strong>
-          [% IF err_missinginput %]
-            <!-- This is just the combination of err_username and
-                 err_password if you want only one error message.  We
-                 don't use it. -->
-          [% END %]
-          [% IF err_username && err_password %]
-            <!-- Error: no username or password submitted. -->
-            Error: Enter your username and password.
-          [% ELSIF err_username %]
-            <!-- Error: no username submitted. -->
-            Error: Enter your username.
-          [% ELSIF err_password %]
-            <!-- Error: no password submitted. -->
-            Error: Enter your password.
-          [% END %]
-
-          [% IF err_loginfailed %]
-            <!-- Error: login failed. -->
-            Error: You entered an incorrect username or password (or both).
-          [% END %]
-
-          [% IF err_rejected %]
-            <!-- Error: user principal rejected. -->
-            Error: That username may not authenticate to this service.
-          [% END %]
-
-          [% IF err_forced %]
-            <!-- Not really an error, forced login. -->
-            This web site requires that you log in with username and
-            password.
-          [% END %]
-        </strong></p>
-        <p>Click <a href="/help.html">help</a> for assistance.</p>
-      </div>
-    [% END %]
-
-    [% IF remuser_failed %]
-      <div class="error" align="center">
-        <p><strong>Error: Apache authentication was tried and
-        failed.</strong></p>
-      </div>
-    [% END %]
-
-    <div class="loginbox" align="center">
-      <table border="1" width="70%">
-        <tr>
-          <td><img alt="Login" src="/images/login.png"
-                   width="160" height="160"/></td>
-          <td>
-            <div class="loginform">
-              <form name="login"
-                    action="[% script_name FILTER html %]"
-                    method="post" autocomplete="OFF"
-                    enctype="application/x-www-form-urlencoded">
-                <input type="hidden" name="rm" value="index">
-                <input type="hidden" name="RT"
-                       value="[% RT FILTER html %]">
-                <input type="hidden" name="ST"
-                       value="[% ST FILTER html %]">
-                <input type="hidden" name="login" value="yes">
-                <table>
-                  <tr>
-                    <td><strong>Username:</strong></td>
-                    <td><input name="username" type="text"
-                               value="[% username FILTER html %]"
-                               size="18"><br/></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Password:</strong></td>
-                    <td><input name="password" type="password" size="18"></td>
-                  </tr>
-[% IF notdefined %]
-<!--
-One may allow the user to set an authorization identity during login.  It
-will be rejected if not allowed for this site.  However, since an
-authorization identity is normally rare rather than common, prompting
-during every login is usually not appropriate.  Instead, it's handled by
-the code in the confirm template that allows the user to change
-authorization identities if appropriate.
-
-                  <tr>
-                    <td><strong>Identity:</strong></td>
-                    <td><input name="authz_subject" type="text" size="18"></td>
-                  </tr>
--->
-[% END %]
-                  <tr>
-                    <td colspan="2" align="right">
-                      <input type="checkbox" name="public_computer" value="1">
-                      This is a public system, do not remember my login on
-                      this machine.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" align="right">
-                      <input type="submit" name="Submit" value="Login">
-                    </td>
-                  </tr>
-                </table>
-              </form>
-            </div>
-            <div class="loginlinks">
-              <a href="/help.html">help</a>
-              [% IF login_cancel %]
-                <!-- The WebAuth Server has a cancel url.-->
-                <a href="[% cancel_url FILTER html %]">cancel</a>
-              [% END %]
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    [% IF show_remuser %]
-      <div class="remuserbox" align="center">
-        <table border="1" width="70%">
-          <tr>
-              <td>
-                Or skip entering your username and password.  Instead,
-                log in using your computer login information via
-                Apache authentication:
-              </td>
-              <td>
-                <form action="[% remuser_url FILTER html %]"
-                      method="get">
-                  <input type="hidden" name="rm" value="index">
-                  <input type="hidden" name="RT"
-                         value="[% RT FILTER html %]">
-                  <input type="hidden" name="ST"
-                         value="[% ST FILTER html %]">
-                  <input type="submit" name="Submit" value="remuser">
-                </form>
-              </td>
-            </tr>
-        </table>
-      </div>
-    [% END %]
-
-    <div class="trailer">
-      <h2>Caution:</h2>
-
-      <p>Never enter your WebAuth username and password on a web page
-      unless the page is a page directly served by the WebAuth login
-      server.</p>
-    </div>
-  </body>
+	<!-- Designed by Dan Fuhry in Rochester. (lol) -->
+	<!-- :mode=html: (to make jEdit happy) -->
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+		<title>CSH: WebAuth Login</title>
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/webauth.css" />
+		
+		<script type="text/javascript" src="/images/jquery.js"></script>
+		<script type="text/javascript" src="/images/bootstrap/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="form-wrapper">
+			<div class="csh-logo">
+				<img alt="Computer Science House" src="/images/csh-logo.png" />
+			</div>
+			
+			<form name="login" action="[% script_name FILTER html %]" method="post" enctype="application/x-www-form-urlencoded">
+			
+				<input type="hidden" name="RT" value="[% RT FILTER html %]" />
+				<input type="hidden" name="ST" value="[% ST FILTER html %]" />
+				<input type="hidden" name="LC" value="[% LC FILTER html %]" />
+				<input type="hidden" name="login" value="yes" />
+			
+				<div class="control-group csh-username">
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">
+								<i class="icon icon-white icon-user"></i>
+							</span>
+							<input type="text" class="input-medium" name="username" placeholder="Username" value="[% username FILTER html %]" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="control-group csh-password">
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">
+								<i class="icon icon-white icon-lock"></i>
+							</span>
+							<input type="password" class="input-medium" name="password" placeholder="Password" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="control-group csh-submit">
+					<button class="btn btn-inverse btn-mini">
+						Log in
+					</button>
+					
+					&nbsp;
+					
+					<a class="btn btn-warning btn-mini" href="/CA.crt">
+						<i class="icon icon-white icon-certificate"></i>
+						Download certificate
+					</a>
+					
+					[% IF login_cancel %]
+						&nbsp;
+						<a class="btn btn-mini" href="[% cancel_url FILTER html %]">Cancel</a>
+					[% END %]
+				</div>
+				
+				[% IF error %]
+					<div class="alert alert-error">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						
+						[% IF err_missinginput %]
+						<!-- This is just the combination of err_username and
+							err_password if you want only one error message.  We
+							don't use it. -->
+						[% END %]
+						
+						[% IF err_username && err_password %]
+							<!-- Error: no username or password submitted. -->
+							Error: Enter your username and password.
+						[% ELSIF err_username %]
+							<!-- Error: no username submitted. -->
+							Error: Enter your username.
+						[% ELSIF err_password %]
+							<!-- Error: no password submitted. -->
+							Error: Enter your password.
+						[% END %]
+						
+						[% IF err_loginfailed %]
+							<!-- Error: login failed. -->
+							Error: You entered an incorrect username or password (or both).
+						[% END %]
+						
+						[% IF err_rejected %]
+							<!-- Error: user principal rejected. -->
+							Error: That username may not authenticate to this service.
+						[% END %]
+						
+						[% IF err_forced %]
+							<!-- Not really an error, forced login. -->
+							This web site requires that you log in with username and
+							password.
+						[% END %]
+					</div>
+				[% END %]
+				[% IF remuser_failed %]
+					<div class="alert alert-error">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						Error: Apache authentication was tried and failed.
+					</div>
+				[% END %]
+			</form>
+		</div>
+	</body>
 </html>
