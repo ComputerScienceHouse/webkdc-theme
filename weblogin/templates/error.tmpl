@@ -1,166 +1,66 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-  <head>
-    <http-equiv="pragma" content="no-cache">
-    <title>WebAuth Error</title>
-  </head>
-
-  [% IF notdefined %]
-<!--
-This is the template for the WebAuth error page.  It is displayed whenever
-the login.fcgi script on the weblogin server encounters an error.
-Variables used:
-
-err_html                  : the complete HTML text of the error
-err_bad_method            : browser submitted login page via GET not POST
-err_confirm               : incomplete data for confirm page
-err_cookies_disabled      : cookies disabled in the web browser
-err_insufficient_mfactor  : site requested higher multifactor than user has
-err_insufficient_loa      : site requested higher LoA than user has
-err_lockout               : account locked out due to login failures
-err_no_mfactor            : site requested multifactor, user has none
-err_no_request_token      : no request token (user went straight to weblogin)
-err_replay                : authentication was a replay
-err_sendauth              : sendauth function returned non-zero status
-err_webkdc                : the WebKDC returned an error
-err_msg                   : error message from WebKDC
-multifactor_required      : level of multifactor required for the destination
-multifactor_configured    : level of multifactor set up by the user
-login_cancel              : a cancel URL was specified
-cancel_url                : the specified cancel URL
-
-You may customize this file however you wish for your site.
-
-The authors hereby relinquish any claim to any copyright that they may
-have in this work, whether granted under contract or by operation of law
-or international treaty, and hereby commit to the public, at large, that
-they shall not, at any time in the future, seek to enforce any copyright
-in this work against any person or entity, or prevent any person or
-entity from copying, publishing, distributing or creating derivative
-works of this work.
--->
-  [% END %]
-
-  <body>
-    <h1 align="center">WebAuth Error</h1>
-    <div class="loginbox" align="center">
-      <table border="1" width="70%">
-        <tr>
-          <td><img alt="Error" src="/images/error.png"
-                   width="160" height="160"/></td>
-          <td>
-            <div class="errortext">
-              [% IF err_html %]
-                [% err_html %]
-              [% ELSE %]
-              <p><strong>An error has occurred</strong></p>
-
-              <!-- Error: browser submitted login page via GET -->
-              [% IF err_bad_method %]
-                <p>Error: Login form not properly submitted.</p>
-                <p>Your browser has improperly submitted the login form
-                   via GET instead of POST, which risks exposing your
-                   password in your browser history and to other web sites
-                   you visit.  Please check that your browser is not
-                   misconfigured and you do not use browser plugins that
-                   override proper form handling.</p>
-              [% END %]
-
-              <!-- Error: cookies disabled in web browser -->
-              [% IF err_cookies_disabled %]
-                <p>Error: You must enable cookies on your web browser.</p>
-                <p>You have just tried to access a web service that is
-                   protected by WebAuth.  However, WebAuth is unable to
-                   tell this web service who you are because your browser
-                   has cookies disabled.</p>
-                <p>WebAuth depends on cookies to communicate with your web
-                   service.  Please enable cookies in your web browser.<p>
-              [% END %]
-
-              <!-- Error: locked out due to excessive login failures -->
-              [% IF err_lockout %]
-                <p>Error: Too many login failures.</p>
-                <p>There have been too many failed login attempts for this
-                   account.  Please try again later.</p>
-              [% END %]
-
-              <!-- Error: no response token -->
-              [% IF err_no_request_token %]
-                <p>Error: The URL given is incomplete.</p>
-              [% END %]
-
-              <!-- Error: request was a replay -->
-              [% IF err_replay %]
-                <p>Error: Authentication was a replay.</p>
-                <p>You cannot repeat your authentication to this site.  If
-                   you reached this page via the back button in your
-                   browser, start over by going directly to the web site
-                   you want to visit.</p>
-              [% END %]
-
-              <!-- Error: missing data when redisplaying the confirm page -->
-              [% IF err_confirm %]
-                <p>Error: Necessary form data was missing.</p>
-                <p>You have probably accessed a stale cached page by
-                   mistake.</p>
-              [% END %]
-
-              <!-- Error: multifactor required, user has none set up -->
-              [% IF err_no_mfactor %]
-                <p>Error: Multifactor is required for the destination site
-                   but you have none set up to use.</p>
-              [% END %]
-
-              <!-- Error: higher multifactor level required than user has -->
-              [% IF err_insufficient_mfactor %]
-                <p>Error: The destination site requires a higher level of
-                   multifactor than you have set up.</p>
-                <p>The site requires one of the following levels:<br />
-                   [% FOREACH level IN multifactor_required %]
-                     [% level FILTER html %]<br />
-                   [% END %]
-                </p>
-                <p>Your level of multifactor is only:<br />
-                   [% FOREACH level IN multifactor_configured %]
-                     [% level FILTER html %]<br />
-                   [% END %]
-                </p>
-                [% IF login_cancel %]
-                  <p><a href="[% cancel_url FILTER html %]">Cancel</a>
-                     logging on to this service</p>
-                [% END %]
-              [% END %]
-
-              <!-- Error: higher LoA required than user has -->
-              [% IF err_insufficient_loa %]
-                <p>Error: The destination site requires a higher level of
-                   assurance than you have set up.</p>
-                [% IF login_cancel %]
-                  <p><a href="[% cancel_url FILTER html %]">Cancel</a>
-                     logging on to this service</p>
-                [% END %]
-              [% END %]
-
-              <!-- Error: sendauth failed to run successfully -->
-              [% IF err_sendauth %]
-                <p>Error: Unable to send authentication code.</p>
-                <p>There was an internal error while attempting to send you
-                   an authentication code.</p>
-              [% END %]
-
-              [% IF err_webkdc %]
-                <p>Error: [% err_msg FILTER html %]</p>
-              [% END %]
-
-              <p>To try again, please return to the preceding web page
-              (or you may need to start your request for this web
-              service again).  Click <a href="/help.html">help</a> for
-              assistance</p>
-              [% END %]
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </body>
+	<!-- Designed by Dan Fuhry in Rochester. (lol) -->
+	<!-- :mode=html: (to make jEdit happy) -->
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+		<title>CSH: WebAuth Login</title>
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/webauth.css" />
+		
+		<script type="text/javascript" src="/images/jquery.js"></script>
+		<script type="text/javascript" src="/images/bootstrap/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="form-wrapper">
+			<div class="csh-logo">
+				<img alt="Computer Science House" src="/images/csh-logo.png" />
+			</div>
+			
+			<div class="alert alert-error">
+				<p><strong>The system is unable to log you in.</strong></p>
+				
+				<!-- Error: browser submitted login page via GET -->
+				[% IF err_bad_method %]
+				Error: Login form not properly submitted.<br />
+				Your browser has improperly submitted the login form
+				   via GET instead of POST, which risks exposing your
+				   password in your browser history and to other web sites
+				   you visit.  Please check that your browser is not
+				   misconfigured and you do not use browser plugins that
+				   override proper form handling.
+				[% END %]
+				
+				<!-- Error: cookies disabled in web browser -->
+				[% IF err_cookies_disabled %]
+				Error: You must enable cookies on your web browser.<br />
+				You have just tried to access a web service that is
+				   protected by WebAuth.  However, WebAuth is unable to
+				   tell this web service who you are because your browser
+				   has cookies disabled.<br />
+				WebAuth depends on cookies to communicate with your web
+				   service.  Please enable cookies in your web browser.
+				[% END %]
+				
+				<!-- Error: no response token -->
+				[% IF err_no_request_token %]
+				Error: The URL given is incomplete.
+				[% END %]
+				
+				<!-- Error: missing data when redisplaying the confirm page -->
+				[% IF err_confirm %]
+				Error: Necessary form data was missing.<br />
+				You have probably accessed a stale cached page by
+				   mistake.
+				[% END %]
+				
+				[% IF err_webkdc %]
+				Error: [% err_msg FILTER html %]
+				[% END %]
+			</div>
+		</div>
+	</body>
 </html>
