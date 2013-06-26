@@ -1,186 +1,163 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-  <head>
-    <http-equiv="pragma" content="no-cache">
-    <title>WebAuth Password Change</title>
-  </head>
-
-  [% IF notdefined %]
-<!--
-This is the template for the WebAuth password change page.  This page is
-called from pwchange.fcgi script on the weblogin server.  It displays a form
-asking the user for username, current password, and two prompts for the
-new password (for confirmation).  Variables used:
-
-error                  : some error occurred
-err_username           : no username error
-err_password           : no old password error
-err_newpassword        : no new password error
-err_newpassword_match  : new passwords do not match
-err_loginfailed        : username and password were incorrect
-err_rejected           : username not permitted to authenticate
-err_pwweak             : password changed for the password being too weak
-err_pwchange           : actual password change failed (see err_msg for why)
-err_msg                : extra text describing an error
-RT                     : Response Token
-ST                     : Service Token
-CPT                    : kadmin/changepw Token
-skip_username          : suppress display of an entry box for the username
-username               : the username
-password               : the old password
-new_passwd1            : the new password (first)
-new_passwd2            : the new password (second)
-changepw               : set to show this is not our first visit
-expired                : set when sent here for expired password login fail
-
-You may customize this file however you wish for your site.
-
-The authors hereby relinquish any claim to any copyright that they may
-have in this work, whether granted under contract or by operation of law
-or international treaty, and hereby commit to the public, at large, that
-they shall not, at any time in the future, seek to enforce any copyright
-in this work against any person or entity, or prevent any person or
-entity from copying, publishing, distributing or creating derivative
-works of this work.
--->
-  [% END %]
-
-  <body onload="document.pwchange.username.focus();">
-    <h1 align="center">WebAuth Password Change</h1>
-    [% IF error %]
-      <div class="error" align="center">
-        <p><strong>
-          [% IF err_username && err_password %]
-            <!-- Error: no username or password submitted. -->
-            Error: Enter your username and password.
-          [% ELSIF err_username %]
-            <!-- Error: no username submitted. -->
-            Error: Enter your username.
-          [% ELSIF err_password %]
-            <!-- Error: no password submitted. -->
-            Error: Enter your password.
-          [% END %]
-          [% IF err_newpassword %]
-            <!-- Error: at least one of the new password fields was empty. -->
-            Error: Enter your new password twice.
-          [% END %]
-          [% IF err_newpassword_match %]
-            <!-- Error: new passwords do not match. -->
-            Error: The two entries for your new password must match.
-          [% END %]
-
-          [% IF err_loginfailed %]
-            <!-- Error: login failed. -->
-            Error: You entered an incorrect username or password (or both).
-          [% END %]
-
-          [% IF err_rejected %]
-            <!-- Error: user principal rejected. -->
-            Error: That username may not authenticate to this service.
-          [% END %]
-
-          [% IF err_pwweak %]
-            <!-- Error: password was too weak. -->
-            Error: The password given failed strength checking.
-            Please enter a more difficult password not based on a dictionary
-            word.
-          [% END %]
-
-          [% IF err_pwchange %]
-            <!-- Error: password change attempted, failed. -->
-            Error: [% err_msg FILTER html %].
-          [% END %]
-
-        </strong></p>
-        <p>Click <a href="/help.html">help</a> for assistance.</p>
-      </div>
-    [% END %]
-
-    <div class="loginbox" align="center">
-      <table border="1" width="70%">
-        [% IF success %]
-          <tr>
-            <td><img alt="Confirm" src="/images/confirm.png"
-                     width="160" height="160"/></td>
-            <td>
-              <div class="logintext">
-                <p>You have successfully changed your password.</p>
-                <p><strong>Protect your assets:</strong><br/>
-                   Quit your web browser when you are finished (see below
-                   for more details)</p>
-              </div>
-            </td>
-          </tr>
-        [% ELSE %]
-          <tr>
-            <td><img alt="Login" src="/images/login.png"
-                     width="160" height="160"/></td>
-            <td>
-              <div class="loginform">
-                <form name="pwchange"
-                      action="[% script_name FILTER html %]"
-                      method="post" autocomplete="OFF"
-                      enctype="application/x-www-form-urlencoded">
-                  <input type="hidden" name="rm" value="pwchange">
-                  <input type="hidden" name="RT"
-                         value="[% RT FILTER html %]">
-                  <input type="hidden" name="ST"
-                         value="[% ST FILTER html %]">
-                  <input type="hidden" name="CPT"
-                         value="[% CPT FILTER html %]">
-                  <input type="hidden" name="changepw" value="yes">
-                  <input type="hidden" name="expired"
-                         value="[% expired FILTER html %]">
-                  [% IF skip_username %]
-                    <input type="hidden" name="username"
-                           value="[% username FILTER html %]">
-                    <input type="hidden" name="skip_username" value="1">
-                  [% END %]
-                  <table>
-                    [% UNLESS skip_username %]
-                      <tr>
-                        <td><strong>Username:</strong></td>
-                        <td><input name="username" type="text"
-                                   value="[% username FILTER html %]"
-                                   size="18"><br/></td>
-                      </tr>
-                    [% END %]
-                    [% UNLESS skip_password %]
-                      <tr>
-                        <td><strong>Old Password:</strong></td>
-                        <td><input name="password" type="password" size="18"></td>
-                      </tr>
-                    [% END %]
-                    <tr>
-                      <td><strong>New Password (enter twice):</strong></td>
-                      <td>
-                          <input name="new_passwd1" type="password" size="18"><br/>
-                          <input name="new_passwd2" type="password" size="18">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2" align="right">
-                        <input type="submit" name="Submit" value="Change Password">
-                      </td>
-                    </tr>
-                  </table>
-                </form>
-              </div>
-              <div class="loginlinks">
-                <a href="/help.html">help</a>
-              </div>
-            </td>
-          </tr>
-        [% END %]
-      </table>
-    </div>
-
-    <div class="trailer">
-      <h2>Caution:</h2>
-
-      <p>Never enter your WebAuth username and password on a web page
-      unless the page is a page directly served by the WebAuth login
-      server.</p>
-    </div>
-  </body>
+	<!-- Designed by Dan Fuhry in Rochester. (lol) -->
+	<!-- :mode=html: (to make jEdit happy) -->
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		
+		<title>CSH: WebAuth Login</title>
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/bootstrap/css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="/images/webauth.css" />
+		
+		<script type="text/javascript" src="/images/jquery.js"></script>
+		<script type="text/javascript" src="/images/bootstrap/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="form-wrapper">
+			<div class="csh-logo">
+				<img alt="Computer Science House" src="/images/csh-logo.png" />
+			</div>
+			
+			[% IF success %]
+			<div class="alert alert-success">
+				<p><strong>Your password has been successfully changed.</strong></p>
+			</div>
+			
+			<p><a class="btn btn-inverse btn-mini" href="https://members.csh.rit.edu/">Go to members</a></p>
+			[% ELSE %]
+			
+			<form name="pwchange" action="[% script_name FILTER html %]" method="post" autocomplete="OFF" enctype="application/x-www-form-urlencoded">
+			
+				<input type="hidden" name="rm" value="pwchange">
+				<input type="hidden" name="RT" value="[% RT FILTER html %]">
+				<input type="hidden" name="ST" value="[% ST FILTER html %]">
+				<input type="hidden" name="CPT" value="[% CPT FILTER html %]">
+				<input type="hidden" name="changepw" value="yes">
+				<input type="hidden" name="expired" value="[% expired FILTER html %]">
+				
+				<div class="control-group csh-username">
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">
+								<i class="icon icon-white icon-user"></i>
+							</span>
+							
+							[% IF skip_username %]
+							<input type="hidden" name="username" value="[% username FILTER html %]">
+							<input type="text" class="input-medium" readonly="readonly" value="[% username FILTER html %]" />
+							<input type="hidden" name="skip_username" value="1">
+							[% ELSE %]
+							<input type="text" class="input-medium" name="username" placeholder="Username" value="[% username FILTER html %]" />
+							[% END %]
+						</div>
+					</div>
+				</div>
+				
+				[% UNLESS skip_password %]
+				<div class="control-group csh-password">
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">
+								<i class="icon icon-white icon-lock"></i>
+							</span>
+							<input type="password" class="input-medium" name="password" placeholder="Old password" />
+						</div>
+					</div>
+				</div>
+				[% END %]
+				
+				<div class="control-group csh-password">
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">
+								<i class="icon icon-white icon-lock"></i>
+							</span>
+							<input type="password" class="input-medium" name="new_passwd1" placeholder="New password" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="control-group csh-password">
+					<div class="controls">
+						<div class="input-prepend">
+							<span class="add-on">
+								<i class="icon icon-white icon-lock"></i>
+							</span>
+							<input type="password" class="input-medium" name="new_passwd2" placeholder="Confirm" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="control-group csh-submit">
+					<button class="btn btn-inverse btn-mini">
+						Change Password
+					</button>
+					
+					&nbsp;
+					
+					[% IF login_cancel %]
+						&nbsp;
+						<a class="btn btn-mini" href="[% cancel_url FILTER html %]">Cancel</a>
+					[% END %]
+				</div>
+				
+				[% IF error %]
+					<div class="alert alert-error">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						
+						[% IF err_username && err_password %]
+							<!-- Error: no username or password submitted. -->
+							Error: Enter your username and password.
+						[% ELSIF err_username %]
+							<!-- Error: no username submitted. -->
+							Error: Enter your username.
+						[% ELSIF err_password %]
+							<!-- Error: no password submitted. -->
+							Error: Enter your password.
+						[% END %]
+						[% IF err_newpassword %]
+							<!-- Error: at least one of the new password fields was empty. -->
+							Error: Enter your new password twice.
+						[% END %]
+						[% IF err_newpassword_match %]
+							<!-- Error: new passwords do not match. -->
+							Error: The two entries for your new password must match.
+						[% END %]
+						
+						[% IF err_loginfailed %]
+							<!-- Error: login failed. -->
+							Error: You entered an incorrect username or password (or both).
+						[% END %]
+						
+						[% IF err_rejected %]
+							<!-- Error: user principal rejected. -->
+							Error: That username may not authenticate to this service.
+						[% END %]
+						
+						[% IF err_pwweak %]
+							<!-- Error: password was too weak. -->
+							Error: The password given failed strength checking.
+							Please enter a more difficult password not based on a dictionary
+							word.
+						[% END %]
+						
+						[% IF err_pwchange %]
+							<!-- Error: password change attempted, failed. -->
+							Error: [% err_msg FILTER html %].
+						[% END %]
+					</div>
+				[% END %]
+				[% IF remuser_failed %]
+					<div class="alert alert-error">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						Error: Apache authentication was tried and failed.
+					</div>
+				[% END %]
+			</form>
+			[% END %] <!-- END if success -->
+		</div>
+	</body>
 </html>
+
